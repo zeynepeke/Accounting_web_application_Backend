@@ -8,7 +8,6 @@ namespace WebAPI.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Account> Accounts { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Revenue> Revenues { get; set; }
@@ -29,7 +28,7 @@ namespace WebAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // User entity configuration
+            
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.UserId);
@@ -37,22 +36,12 @@ namespace WebAPI.Data
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Surname).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Balance).IsRequired().HasColumnType("decimal(18,2)");
                 entity.Property(e => e.CreatedAt).IsRequired();
                 entity.Property(e => e.UpdatedAt).IsRequired();
             });
 
-            // Account entity configuration
-            modelBuilder.Entity<Account>(entity =>
-            {
-                entity.HasKey(e => e.AccountId);
-                entity.Property(e => e.AccountName).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.Balance).IsRequired().HasColumnType("decimal(18,2)");
-                entity.HasOne(e => e.User)
-                      .WithMany(u => u.Accounts)
-                      .HasForeignKey(e => e.UserId);
-            });
-
-            // Expense entity configuration
+            
             modelBuilder.Entity<Expense>(entity =>
             {
                 entity.HasKey(e => e.ExpenseId);
@@ -64,7 +53,7 @@ namespace WebAPI.Data
                       .HasForeignKey(e => e.UserId);
             });
 
-            // Invoice entity configuration
+            
             modelBuilder.Entity<Invoice>(entity =>
             {
                 entity.HasKey(e => e.InvoiceId);
@@ -77,7 +66,6 @@ namespace WebAPI.Data
                       .HasForeignKey(e => e.UserId);
             });
 
-            // Order entity configuration
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.HasKey(e => e.OrderId);
@@ -91,7 +79,7 @@ namespace WebAPI.Data
                       .HasForeignKey(e => e.ProductId);
             });
 
-            // Product entity configuration
+            
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.HasKey(e => e.ProductId);
@@ -99,7 +87,7 @@ namespace WebAPI.Data
                 entity.Property(e => e.Price).IsRequired().HasColumnType("decimal(18,2)");
             });
 
-            // Revenue entity configuration
+          
             modelBuilder.Entity<Revenue>(entity =>
             {
                 entity.HasKey(e => e.RevenueId);
