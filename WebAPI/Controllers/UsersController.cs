@@ -95,5 +95,19 @@ namespace WebAPI.Controllers
 
 
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var result = await _userService.DeleteUserAsync(id);
+
+            if (!result)
+            {
+                return NotFound("Kullanıcı bulunamadı.");
+            }
+
+            return NoContent();
+        }
+
     }
 }
