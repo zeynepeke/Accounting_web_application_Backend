@@ -115,5 +115,30 @@ namespace WebAPI.Services
             return true;
         }
 
+
+        public async Task<bool> UpdateBalanceAsync(int userId, decimal newBalance)
+        {
+            // Bakiyenin negatif olmasını engellemek için kontrol
+            if (newBalance < 0)
+            {
+                return false; // veya uygun bir hata mesajı dönebilirsiniz
+            }
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return false; // Kullanıcı bulunamadı
+            }
+
+            user.Balance = newBalance;
+            user.UpdatedAt = DateTime.Now;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+
     }
 } 

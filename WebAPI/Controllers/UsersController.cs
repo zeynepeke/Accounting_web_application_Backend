@@ -109,5 +109,23 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        //id ye bağlı bakiyeyi güncelliyor.
+
+        [HttpPut("update-balance/{id}")]
+        public async Task<IActionResult> UpdateBalance(int userId, [FromBody] decimal newBalance)
+        {
+            var result = await _userService.UpdateBalanceAsync(userId, newBalance);
+            if (result)
+            {
+                return Ok("Balance updated successfully.");
+            }
+            else
+            {
+                return BadRequest("Failed to update balance. Ensure the balance is not negative and user exists.");
+            }
+        }
+
+
+
     }
 }
