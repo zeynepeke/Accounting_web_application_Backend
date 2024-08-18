@@ -16,5 +16,6 @@ namespace WebAPI.Models
 
         public User User { get; set; }
         public Product Product { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

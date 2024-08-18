@@ -11,6 +11,7 @@ namespace WebAPI.Data
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Revenue> Revenues { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

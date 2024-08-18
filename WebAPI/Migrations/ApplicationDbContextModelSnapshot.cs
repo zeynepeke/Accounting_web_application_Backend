@@ -17,7 +17,7 @@ namespace WebAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -132,6 +132,13 @@ namespace WebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -139,6 +146,12 @@ namespace WebAPI.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("ProductId");
 
@@ -182,16 +195,17 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("UserId"));
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -205,7 +219,6 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
@@ -213,7 +226,8 @@ namespace WebAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
