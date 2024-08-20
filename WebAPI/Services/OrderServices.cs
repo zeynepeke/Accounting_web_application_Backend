@@ -1,98 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebAPI.Data; // Uygulamanızın veri bağlamı için kullanılan namespace
-using WebAPI.Models; // Uygulamanızın modelleri için kullanılan namespace
-using WebAPI.DTOs;   // Uygulamanızın DTO'ları için kullanılan namespace
+using Microsoft.EntityFrameworkCore;
+using WebAPI.Data;
+using WebAPI.Models;
 
-public class OrderService
+namespace WebAPI.Services
 {
-    private readonly ApplicationDbContext _context;
-
-    public OrderService(ApplicationDbContext context)
+    public class OrderService
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    public async Task<string> CreateOrderAsync(List<OrderDetailDto> orderDetailsDto)
-    {
-        // Stok kontrolü yap
-        foreach (var detail in orderDetailsDto)
+        public OrderService(ApplicationDbContext context)
         {
-            var product = await _context.Products.FindAsync(detail.ProductId);
-            if (product == null)
+            _context = context;
+        }
+
+        // Get all orders
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        {
+            return await _context.Orders.ToListAsync();
+        }
+
+        // Get order by ID
+        public async Task<Order> GetOrderByIdAsync(int id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
+
+        // Create a new order
+        public async Task<Order> CreateOrderAsync(Order order)
+        {
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
+        // Update an existing order
+        public async Task<Order> UpdateOrderAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
+        // Delete an order
+        public async Task<bool> DeleteOrderAsync(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
             {
-                return $"Ürün ID {detail.ProductId} bulunamadı.";
+                return false;
             }
 
-            if (product.StockQuantity < detail.Quantity)
-            {
-                return $"Ürün ID {detail.ProductId} için yeterli stok bulunmuyor.";
-            }
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+            return true;
         }
-
-        // Siparişi oluştur
-        var order = new Order
-        {
-            OrderDate = DateTime.Now
-        };
-
-        _context.Orders.Add(order);
-
-        foreach (var detail in orderDetailsDto)
-        {
-            var orderDetail = new OrderDetail
-            {
-                Order = order,
-                ProductId = detail.ProductId,
-                Quantity = detail.Quantity
-            };
-
-            var product = await _context.Products.FindAsync(detail.ProductId);
-            product.StockQuantity -= detail.Quantity;
-
-            _context.OrderDetails.Add(orderDetail);
-        }
-
-        // Değişiklikleri kaydet
-        await _context.SaveChangesAsync();
-
-        return "Sipariş başarıyla oluşturuldu.";
-    }
-
-    public async Task<string> DeleteOrderAsync(int orderId)
-    {
-        var order = await _context.Orders.FindAsync(orderId);
-        if (order == null)
-        {
-            return "Sipariş bulunamadı.";
-        }
-
-        // İlgili sipariş detaylarını da silmek için (isteğe bağlı)
-        var orderDetails = _context.OrderDetails.Where(od => od.OrderId == orderId).ToList();
-        _context.OrderDetails.RemoveRange(orderDetails);
-
-        _context.Orders.Remove(order);
-        await _context.SaveChangesAsync();
-
-        return "Sipariş başarıyla silindi.";
     }
 }
-/*
-Constructor: ApplicationDbContext nesnesini alarak _context alanına atar. Bu, veri erişimi için kullanılan bağlamdır.
-
-CreateOrderAsync Metodu:
-
-Stok Kontrolü: Her sipariş detayını kontrol eder ve ürünün stok miktarını doğrular.
-Sipariş Oluşturma: Yeni bir sipariş oluşturur ve Orders tablosuna ekler.
-Sipariş Detaylarını Eklemek: Sipariş detaylarını OrderDetails tablosuna ekler ve stok miktarını günceller.
-Değişiklikleri Kaydetmek: Veritabanındaki tüm değişiklikleri kaydeder.
-DeleteOrderAsync Metodu:
-
-Siparişi Bulma: Silinmek istenen siparişi veritabanında bulur.
-Sipariş Detaylarını Silme: Siparişle ilişkili tüm detayları siler.
-Siparişi Silmek: Siparişi Orders tablosundan siler.
-Değişiklikleri Kaydetmek: Veritabanındaki tüm değişiklikleri kaydeder.
- 
- */

@@ -25,6 +25,8 @@ namespace WebAPI
 
             // ProductService ekleniyor
             builder.Services.AddScoped<ProductService>();
+            // order servis eklendi
+            builder.Services.AddScoped<OrderService>();
 
             var app = builder.Build();
 

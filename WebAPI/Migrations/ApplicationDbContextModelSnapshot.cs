@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Data;
-
 #nullable disable
-
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
@@ -17,291 +15,202 @@ namespace WebAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
             modelBuilder.Entity("WebAPI.Models.Expense", b =>
-                {
-                    b.Property<int>("ExpenseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExpenseId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ExpenseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Expenses");
-                });
-
+            {
+                b.Property<int>("ExpenseId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExpenseId"));
+                b.Property<decimal>("Amount")
+                    .HasColumnType("decimal(18,2)");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
+                b.Property<DateTime>("Date")
+                    .HasColumnType("datetime2");
+                b.Property<string>("Description")
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .HasColumnType("nvarchar(500)");
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("datetime2");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
+                b.HasKey("ExpenseId");
+                b.HasIndex("UserId");
+                b.ToTable("Expenses");
+            });
             modelBuilder.Entity("WebAPI.Models.Invoice", b =>
-                {
-                    b.Property<int>("InvoiceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("IssueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("InvoiceId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Invoices");
-                });
-
+            {
+                b.Property<int>("InvoiceId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"));
+                b.Property<decimal>("Amount")
+                    .HasColumnType("decimal(18,2)");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
+                b.Property<DateTime>("DueDate")
+                    .HasColumnType("datetime2");
+                b.Property<DateTime>("IssueDate")
+                    .HasColumnType("datetime2");
+                b.Property<string>("Status")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("datetime2");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
+                b.HasKey("InvoiceId");
+                b.HasIndex("UserId");
+                b.ToTable("Invoices");
+            });
             modelBuilder.Entity("WebAPI.Models.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Orders");
-                });
-
+            {
+                b.Property<int>("OrderId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+                b.Property<DateTime>("OrderDate")
+                    .HasColumnType("datetime2");
+                b.Property<int>("ProductId")
+                    .HasColumnType("int");
+                b.Property<int>("Quantity")
+                    .HasColumnType("int");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
+                b.HasKey("OrderId");
+                b.HasIndex("ProductId");
+                b.HasIndex("UserId");
+                b.ToTable("Orders");
+            });
             modelBuilder.Entity("WebAPI.Models.Product", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Stock")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("Products");
-                });
-
+            {
+                b.Property<int>("ProductId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("nvarchar(100)");
+                b.Property<decimal>("Price")
+                    .HasColumnType("decimal(18,2)");
+                b.HasKey("ProductId");
+                b.ToTable("Products");
+            });
             modelBuilder.Entity("WebAPI.Models.Revenue", b =>
-                {
-                    b.Property<int>("RevenueId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RevenueId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RevenueId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Revenues");
-                });
+            {
+                b.Property<int>("RevenueId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RevenueId"));
+                b.Property<decimal>("Amount")
+                    .HasColumnType("decimal(18,2)");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
+                b.Property<DateTime>("Date")
+                    .HasColumnType("datetime2");
+                b.Property<string>("Source")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("nvarchar(100)");
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("datetime2");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
+                b.HasKey("RevenueId");
+                b.HasIndex("UserId");
+                b.ToTable("Revenues");
+            });
 
             modelBuilder.Entity("WebAPI.Models.User", b =>
-                {
-                    b.Property<int?>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("UserId"));
-
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("Users");
-                });
-
+            {
+                b.Property<int>("UserId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                b.Property<decimal>("Balance")
+                    .HasColumnType("decimal(18,2)");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
+                b.Property<string>("Email")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("nvarchar(100)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
+                b.Property<string>("Password")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+                b.Property<string>("Surname")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("nvarchar(50)");
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("datetime2");
+                b.Property<string>("Username")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("nvarchar(100)");
+                b.HasKey("UserId");
+                b.ToTable("Users");
+            });
             modelBuilder.Entity("WebAPI.Models.Expense", b =>
-                {
-                    b.HasOne("WebAPI.Models.User", "User")
-                        .WithMany("Expenses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
+            {
+                b.HasOne("WebAPI.Models.User", "User")
+                    .WithMany("Expenses")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+                b.Navigation("User");
+            });
             modelBuilder.Entity("WebAPI.Models.Invoice", b =>
-                {
-                    b.HasOne("WebAPI.Models.User", "User")
-                        .WithMany("Invoices")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
+            {
+                b.HasOne("WebAPI.Models.User", "User")
+                    .WithMany("Invoices")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+                b.Navigation("User");
+            });
             modelBuilder.Entity("WebAPI.Models.Order", b =>
-                {
-                    b.HasOne("WebAPI.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebAPI.Models.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
+            {
+                b.HasOne("WebAPI.Models.Product", "Product")
+                    .WithMany()
+                    .HasForeignKey("ProductId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+                b.HasOne("WebAPI.Models.User", "User")
+                    .WithMany("Orders")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+                b.Navigation("Product");
+                b.Navigation("User");
+            });
             modelBuilder.Entity("WebAPI.Models.Revenue", b =>
-                {
-                    b.HasOne("WebAPI.Models.User", "User")
-                        .WithMany("Revenues")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
+            {
+                b.HasOne("WebAPI.Models.User", "User")
+                    .WithMany("Revenues")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+                b.Navigation("User");
+            });
             modelBuilder.Entity("WebAPI.Models.User", b =>
-                {
-                    b.Navigation("Expenses");
-
-                    b.Navigation("Invoices");
-
-                    b.Navigation("Orders");
-
-                    b.Navigation("Revenues");
-                });
+            {
+                b.Navigation("Expenses");
+                b.Navigation("Invoices");
+                b.Navigation("Orders");
+                b.Navigation("Revenues");
+            });
 #pragma warning restore 612, 618
         }
     }

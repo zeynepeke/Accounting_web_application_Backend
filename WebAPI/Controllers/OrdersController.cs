@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebAPI.DTOs;
+using WebAPI.Models;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
@@ -16,28 +17,61 @@ namespace WebAPI.Controllers
             _orderService = orderService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] List<OrderDetailDto> orderDetailsDto)
+        // GET: api/Orders
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            var result = await _orderService.CreateOrderAsync(orderDetailsDto);
-            if (result == "Sipariş başarıyla oluşturuldu.")
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
+            return Ok(await _orderService.GetAllOrdersAsync());
         }
 
-        [HttpDelete("{orderId}")]
-        public async Task<IActionResult> DeleteOrder(int orderId)
+        // GET: api/Orders/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            var result = await _orderService.DeleteOrderAsync(orderId);
-            if (result == "Sipariş başarıyla silindi.")
+            var order = await _orderService.GetOrderByIdAsync(id);
+
+            if (order == null)
             {
-                return Ok(result);
+                return NotFound();
             }
 
-            return NotFound(result);
+            return Ok(order);
+        }
+
+        // POST: api/Orders
+        [HttpPost]
+        public async Task<ActionResult<Order>> PostOrder(Order order)
+        {
+            var createdOrder = await _orderService.CreateOrderAsync(order);
+            return CreatedAtAction("GetOrder", new { id = createdOrder.OrderId }, createdOrder); // OrderId kullanılıyor
+        }
+
+        // PUT: api/Orders/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutOrder(int id, Order order)
+        {
+            if (id != order.OrderId) // OrderId kullanılıyor
+            {
+                return BadRequest();
+            }
+
+            await _orderService.UpdateOrderAsync(order);
+
+            return NoContent();
+        }
+
+        // DELETE: api/Orders/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var success = await _orderService.DeleteOrderAsync(id);
+
+            if (!success)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }
