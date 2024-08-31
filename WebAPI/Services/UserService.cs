@@ -26,7 +26,8 @@ namespace WebAPI.Services
             //kullanıcı kaydı için yazılmış fonksiyon
             var user = new User
             {
-                Username = userDTO.Username,
+
+               Username=userDTO.Username,
                 Name = userDTO.Name,
                 Surname = userDTO.Surname,
                 Email = userDTO.Email,
@@ -39,18 +40,35 @@ namespace WebAPI.Services
             return user;
         }
 
-        public async Task<bool> ValidateUserAsync(string email, string password)
-        {
-            //Kullanıcı girişi yaparken kimliği doğrulamak için yazıldı
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null)
-            {
-                return false;
-            }
 
-            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
-            return result == PasswordVerificationResult.Success;
-        }
+
+
+
+
+
+public async Task<LoginDTO> ValidateUserAsync(string email, string password)
+{
+    // Veritabanından kullanıcı bilgilerini çek
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    if (user == null || _passwordHasher.VerifyHashedPassword(user, user.Password, password) != PasswordVerificationResult.Success)
+    {
+        return null;  // Kullanıcı bulunamazsa veya şifre yanlışsa null döner
+    }
+
+    // Kullanıcının bilgilerini döndür
+    return new LoginDTO
+    {
+        UserId = user.UserId,   // Burada veritabanından userId çekiliyor
+        Email = user.Email,
+    };
+}
+
+
+
+
+
+
+
 
         public async Task<(bool IsValid, string ErrorMessage)> ValidateUserAsync(UserDTO userDTO)
         {
@@ -61,10 +79,6 @@ namespace WebAPI.Services
             }
 
             
-            if (await _context.Users.AnyAsync(u => u.Username == userDTO.Username))
-            {
-                return (false, "Bu kullanıcı adı ile kayıtlı bir kullanıcı zaten var.");
-            }
 
             return (true, null);
         }
@@ -137,6 +151,112 @@ namespace WebAPI.Services
             await _context.SaveChangesAsync();
             return true;
         }
+        
+        
+        
+        
+        
+public async Task<UserDTO> UpdateUserProfileAsync(int userId, UserDTO userDTO)
+{
+    var user = await _context.Users.FindAsync(userId);
+    if (user == null)
+    {
+        return null; // Kullanıcı bulunamazsa null döndür
+    }
+
+    // Kullanıcı bilgilerini güncelle
+    user.Name = userDTO.Name;
+    user.Surname = userDTO.Surname;
+    user.Username = userDTO.Username;
+    user.Email = userDTO.Email;
+
+    // Eski şifre hash'ini sakla
+    var oldPasswordHash = user.Password;
+
+    // Eğer yeni şifre sağlanmışsa güncelle
+    if (!string.IsNullOrEmpty(userDTO.Password))
+    {
+        user.Password = _passwordHasher.HashPassword(user, userDTO.Password);
+
+        // Şifre doğrulama testi
+        var verificationResult = _passwordHasher.VerifyHashedPassword(user, oldPasswordHash, userDTO.Password);
+
+        if (verificationResult == PasswordVerificationResult.Success)
+        {
+            Console.WriteLine("Şifre güncellenmiş ve doğrulanmıştır.");
+        }
+        else
+        {
+            Console.WriteLine("Şifre güncellenirken bir hata oluştu.");
+        }
+    }
+
+    user.UpdatedAt = DateTime.Now;
+
+    _context.Users.Update(user);
+    await _context.SaveChangesAsync();
+
+    return new UserDTO
+    {
+        UserId = user.UserId,
+        Username = user.Username,
+        Name = user.Name,
+        Surname = user.Surname,
+        Email = user.Email
+    };
+}
+
+
+
+
+
+public async Task<bool> UpdatePasswordAsync(int userId, string oldPassword, string newPassword)
+{
+    var user = await _context.Users.FindAsync(userId);
+    if (user == null || _passwordHasher.VerifyHashedPassword(user, user.Password, oldPassword) != PasswordVerificationResult.Success)
+    {
+        return false; // Kullanıcı bulunamadı veya eski şifre yanlış
+    }
+
+    user.Password = _passwordHasher.HashPassword(user, newPassword);
+    user.UpdatedAt = DateTime.Now;
+
+    _context.Users.Update(user);
+    await _context.SaveChangesAsync();
+    return true;
+}
+
+
+public async Task<bool> DeleteUserAsync(int userId, string password)
+{
+    var user = await _context.Users.FindAsync(userId);
+    if (user == null || _passwordHasher.VerifyHashedPassword(user, user.Password, password) != PasswordVerificationResult.Success)
+    {
+        return false;
+    }
+
+    _context.Users.Remove(user);
+    await _context.SaveChangesAsync();
+    return true;
+}
+public async Task<UserDTO> GetUserProfileAsync(int userId)
+{
+    var user = await _context.Users.FindAsync(userId);
+    if (user == null)
+    {
+        return null;
+    }
+
+    return new UserDTO
+    {
+        UserId = user.UserId,
+        Username = user.Username,
+        Name = user.Name,
+        Surname = user.Surname,
+        Email = user.Email
+    };
+}
+
 
 
 
