@@ -43,28 +43,30 @@ namespace WebAPI.Controllers
             return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.ProductId }, createdProduct);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, Product product)
-        {
-            if (id != product.ProductId)
-            {
-                return BadRequest();
-            }
+    [HttpPut("{id}")]
+public async Task<IActionResult> UpdateProduct(int id, Product product)
+{
+    if (id != product.ProductId)
+    {
+        return BadRequest();
+    }
 
-            await _productService.UpdateProductAsync(product);
-            return NoContent();
-        }
+    await _productService.UpdateProductAsync(product);
+    return NoContent();
+}
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
-        {
-            var result = await _productService.DeleteProductAsync(id);
-            if (!result)
-            {
-                return NotFound();
-            }
+[HttpDelete("{id}")]
+public async Task<IActionResult> DeleteProduct(int id)
+{
+    var product = await _productService.GetProductByIdAsync(id);
+    if (product == null)
+    {
+        return NotFound();
+    }
 
-            return NoContent();
-        }
+    await _productService.DeleteProductAsync(id);
+    return NoContent();
+}
+
     }
 }

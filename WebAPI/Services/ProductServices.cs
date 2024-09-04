@@ -32,24 +32,21 @@ namespace WebAPI.Services
             return product;
         }
 
-        public async Task<bool> UpdateProductAsync(Product product)
-        {
-            _context.Products.Update(product);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+     public async Task UpdateProductAsync(Product product)
+{
+    _context.Products.Update(product);
+    await _context.SaveChangesAsync();
+}
 
-        public async Task<bool> DeleteProductAsync(int productId)
-        {
-            var product = await _context.Products.FindAsync(productId);
-            if (product == null)
-            {
-                return false;
-            }
+public async Task DeleteProductAsync(int productId)
+{
+    var product = await _context.Products.FindAsync(productId);
+    if (product != null)
+    {
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+    }
+}
 
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-            return true;
-        }
     }
 }
